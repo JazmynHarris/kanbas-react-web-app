@@ -7,16 +7,7 @@ export default function AssignmentEditor() {
                 <label htmlFor="wd-name" className="form-label">Assignment Name</label><br />
                 <input type="text" id="wd-name" value="A1 - ENV + HTML" className="form-control"/><br /><br />
                 <textarea id="wd-description" className="form-control text-area">
-                    The assignment is <span className="text-danger">available online</span>
-                    <p>Submit a link to the landing page of your Web application running on Netlify.</p>
-                    <p>The landing page should include the following:</p>
-                    <ul>
-                        <li>Your full name and section</li>
-                        <li>Links to each of the lab assignments</li>
-                        <li>Link to the Kanbas application</li>
-                        <li>Links to all relevant source code repositories</li>
-                    </ul>
-                    <p>The Kanbas application should inlcude a link to navigate back to the landing page.</p>
+                    The assignment is available online
                 </textarea>
             </div>
 
