@@ -5,7 +5,14 @@ import { FaGear } from "react-icons/fa6";
 import { CiSearch } from "react-icons/ci";
 import { CiFilter } from "react-icons/ci";
 import { MdOutlineAddBox } from "react-icons/md";
+import * as db from "../../Database";
+import { useParams } from "react-router-dom";
 export default function Grades() {
+    const enrollments = db.enrollments;
+    const { cid } = useParams();
+    const users = db.users;
+    const assignments = db.assignments;
+    const grades = db.grades;
     return (
         <div>
             <div className="float-end">
@@ -50,71 +57,28 @@ export default function Grades() {
                 <thead className="table-secondary">
                     <tr>
                         <th>Student Name</th>
-                        <th align="center">A1 SETUP <br />Out of 100</th>
-                        <th align="center">A2 HTML <br />Out of 100</th>
-                        <th align="center">A3 CSS <br />Out of 100</th>
+                        {
+                            assignments
+                                .filter((assignment) => (assignment.course === cid))
+                                .map((assignment) => (
+                                    <th align="center">{assignment._id} <br /> Out of 100</th>
+                                ))
+                        }
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td className="text-danger">
-                            Jane Adams
-                        </td>
-                        <td>
-                            100%
-                        </td>
-                        <td>
-                            100%
-                        </td>
-                        <td>
-                            100%
-                        </td>
-                    </tr>
-                    <tr className="table-secondary">
-                        <td className="text-danger">
-                            Olivia Rodrigo
-                        </td>
-                        <td>
-                            100%
-                        </td>
-                        <td>
-                            100%
-                        </td>
-                        <td>
-                            100%
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="text-danger">
-                            Kendrick Lamar
-                        </td>
-                        <td>
-                            100%
-                        </td>
-                        <td>
-                            100%
-                        </td>
-                        <td>
-                            100%
-                        </td>
-                    </tr>
-                    <tr className="table-secondary">
-                        <td className="text-danger">
-                            Joshua Marks
-                        </td>
-                        <td>
-                            <div className="form-group">
-                                <input type="text" placeholder="100%" className="border-0" />
-                                <MdOutlineAddBox className="fs-3" />
-                            </div> 
-                        </td>
-                        <td>
-                            100%
-                        </td>
-                        <td>
-                            100%
-                        </td>
-                    </tr>
+                    {
+
+                        users.filter((user) => enrollments.find((e) => e.course === cid && e.user === user._id))
+                            .map((user) => (
+                                <tr>
+                                    <td className="text-danger">{user.firstName} {user.lastName}</td>
+                                    {grades.filter((g) => (g.student === user._id))
+                                        .map((grade) => 
+                                            <td align="center">{grade.grade}</td>)}
+                                </tr>
+                            ))}
+            
                 </tbody>
             </table>
         </div>
