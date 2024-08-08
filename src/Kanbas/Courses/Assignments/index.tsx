@@ -7,15 +7,38 @@ import { TbChecklist } from "react-icons/tb";
 import GreenCheckmark from "./GreenCheckmark";
 import { useLocation, useParams } from "react-router";
 import * as db from "../../Database";
-import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import * as client from "./client";
+import { addAssignment, updateAssignment, setAssignments, deleteAssignment, editAssignment } from "./reducer";
 export default function Assignments() {
-    const { cid } = useParams();
-    const [assignments, setAssignments] = useState<any[]>(db.modules);
-    // const { assignments } = useSelector((state: any) => state.assignmentsReducer);
-    const deleteAssignment = (assignmentId: string) => {
-        setAssignments(assignments.filter((a) => a._id !== assignmentId));
+    const saveAssignment = async (assignment: any) => {
+        const status = await client.updateAssignment(assignment);
+        dispatch(updateAssignment(module));
+    };
+
+    const removeModule = async (moduleId: string) => {
+        await client.deleteAssignment(moduleId);
+        dispatch(deleteAssignment(moduleId));
+    };
+    const createAssignment = async (assignment: any) => {
+        const newAssignment = await client.createAssignment(cid as string, assignment);
+        dispatch(addAssignment(assignment));
     }
+    const fetchAssignments = async () => {
+        const assignments = await client.findAssignmentForCourse(cid as string);
+        dispatch(setAssignments(assignments));
+    };
+    useEffect(() => {
+        fetchAssignments();
+    }, []);
+    const dispatch = useDispatch();
+    const { cid } = useParams();
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+    // const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+    // const deleteAssignment = (assignmentId: string) => {
+    //     setAssignments(assignments.filter((a) => a._id !== assignmentId));
+    // }
     console.log(cid);
     return (
         <div id="wd-assignments">
@@ -45,7 +68,7 @@ export default function Assignments() {
                     </div>
                 </li>
                 {assignments
-                    .filter((assignment: any) => assignment.course == cid)
+                    .filter((assignment: any) => assignment.course !== cid)
                     .map((assignment: any) => (
                     <li className="list-group-item p-0 fs-5">
                         <div className="float-start p-3 ps-2 fs-1 me-3">

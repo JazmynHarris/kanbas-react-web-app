@@ -3,8 +3,30 @@ import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import * as db from "../../Database";
 import { useDispatch, useSelector } from "react-redux";
-import { addAssignment } from "./reducer";
+import * as client from "./client";
+import { addAssignment, updateAssignment, setAssignments, deleteAssignment, editAssignment } from "./reducer";
+import { useEffect } from "react";
 export default function AssignmentEditor() {
+    const saveAssignment = async (assignment: any) => {
+        const status = await client.updateAssignment(assignment);
+        dispatch(updateAssignment(module));
+    };
+
+    const removeModule = async (moduleId: string) => {
+        await client.deleteAssignment(moduleId);
+        dispatch(deleteAssignment(moduleId));
+    };
+    const createAssignment = async (assignment: any) => {
+        const newAssignment = await client.createAssignment(cid as string, assignment);
+        dispatch(addAssignment(assignment));
+    }
+    const fetchAssignments = async () => {
+        const assignments = await client.findAssignmentForCourse(cid as string);
+        dispatch(setAssignments(assignments));
+    };
+    useEffect(() => {
+        fetchAssignments();
+    }, []);
     const { cid } = useParams();
     const { assignments } = useSelector((state: any) => state.assignmentsReducer);
     const dispatch = useDispatch();
