@@ -7,10 +7,38 @@ import { TbChecklist } from "react-icons/tb";
 import GreenCheckmark from "./GreenCheckmark";
 import { useLocation, useParams } from "react-router";
 import * as db from "../../Database";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import * as client from "./client";
+import { addAssignment, updateAssignment, setAssignments, deleteAssignment, editAssignment } from "./reducer";
 export default function Assignments() {
+    const saveAssignment = async (assignment: any) => {
+        const status = await client.updateAssignment(assignment);
+        dispatch(updateAssignment(module));
+    };
+
+    const removeModule = async (moduleId: string) => {
+        await client.deleteAssignment(moduleId);
+        dispatch(deleteAssignment(moduleId));
+    };
+    const createAssignment = async (assignment: any) => {
+        const newAssignment = await client.createAssignment(cid as string, assignment);
+        dispatch(addAssignment(assignment));
+    }
+    const fetchAssignments = async () => {
+        const assignments = await client.findAssignmentForCourse(cid as string);
+        dispatch(setAssignments(assignments));
+    };
+    useEffect(() => {
+        fetchAssignments();
+    }, []);
+    const dispatch = useDispatch();
     const { cid } = useParams();
-    const assignments = db.assignments;
-    const { pathname } = useLocation();
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+    // const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+    // const deleteAssignment = (assignmentId: string) => {
+    //     setAssignments(assignments.filter((a) => a._id !== assignmentId));
+    // }
     console.log(cid);
     return (
         <div id="wd-assignments">
@@ -20,9 +48,8 @@ export default function Assignments() {
                     <input type="text" id="wd-search-assignment"
                         placeholder="Search..." className="form-control me-5 w-150" />
                 <button id="wd-add-assignment-group " className="input-group-item btn btn-lg btn-secondary ms-3 me-3 ps-3 float-end">+ Group</button>
-                <button id="wd-add-assignment" className="input-group-item btn btn-lg btn-danger ps-3 float-end">
-                    + Assignment</button>
-                
+                <a href={`/#/Kanbas/Courses/${cid}/Assignments/Editor`}><button id="wd-add-assignment" className="input-group-item btn btn-lg btn-danger ps-3 float-end">
+                    + Assignment</button></a>
                 
             </div>
             <br />
@@ -41,17 +68,15 @@ export default function Assignments() {
                     </div>
                 </li>
                 {assignments
-                    .filter((assignment) => assignment.course == cid)
-                    .map((assignment) => (
+                    .filter((assignment: any) => assignment.course !== cid)
+                    .map((assignment: any) => (
                     <li className="list-group-item p-0 fs-5">
                         <div className="float-start p-3 ps-2 fs-1 me-3">
                             <BsGripVertical className="me-2" />
                             <TbChecklist className="text-success" />
                         </div>
                             <div className="float-start">
-                                <a href={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}>
-                                    <h4>{assignment._id}: {assignment.title} </h4>
-                                </a>
+                                <h4>{assignment._id}: {assignment.title} </h4>
                             
                             <p>
                                 <span className="text-danger">Multiple Modules </span>
@@ -62,7 +87,8 @@ export default function Assignments() {
                             </p>
                         </div>
                         <div className="float-end p-3 ps-2 me-3">
-                            <GreenCheckmark />
+                                <GreenCheckmark assignmentId={assignment._id}
+                                deleteAssignment={deleteAssignment}/>
                             <IoEllipsisVertical className="" />
                         </div>
                     </li>

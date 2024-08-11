@@ -2,28 +2,52 @@ import { LuCalendarDays } from "react-icons/lu";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import * as db from "../../Database";
+import { useDispatch, useSelector } from "react-redux";
+import * as client from "./client";
+import { addAssignment, updateAssignment, setAssignments, deleteAssignment, editAssignment } from "./reducer";
+import { useEffect } from "react";
 export default function AssignmentEditor() {
+    const saveAssignment = async (assignment: any) => {
+        const status = await client.updateAssignment(assignment);
+        dispatch(updateAssignment(module));
+    };
+
+    const removeModule = async (moduleId: string) => {
+        await client.deleteAssignment(moduleId);
+        dispatch(deleteAssignment(moduleId));
+    };
+    const createAssignment = async (assignment: any) => {
+        const newAssignment = await client.createAssignment(cid as string, assignment);
+        dispatch(addAssignment(assignment));
+    }
+    const fetchAssignments = async () => {
+        const assignments = await client.findAssignmentForCourse(cid as string);
+        dispatch(setAssignments(assignments));
+    };
+    useEffect(() => {
+        fetchAssignments();
+    }, []);
     const { cid } = useParams();
-    const assignments = db.assignments;
-    
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+    const dispatch = useDispatch();
     console.log("cid: " + cid);
     return (
+
         <div id="wd-assignments-editor">
             {assignments
-                .filter((assignment) => (assignment._id === cid))
-                .map((assignment) => (
+                .filter((assignment: any) => (assignment._id !== cid))
+                .map((assignment: any) => (
                     <div>
                         <div className="mb-3">
                             <label htmlFor="wd-name" className="form-label">Assignment Name</label><br />
-                            <input type="text" id="wd-name" value={`${assignment._id} - ${assignment.title}`} className="form-control" /><br /><br />
-                            <textarea id="wd-description" className="form-control text-area">
-                                The assignment is available online
-                            </textarea>
+                            <input type="text" id="wd-name" placeholder="New Assignment" className="form-control" /><br /><br />
+                            <input type="text-area" id="wd-description" className="form-control" placeholder="New Assignment Description" />
                         </div>
                         <table className="table">
                             <tr>
                                 <td align="right" valign="top">
                                     <label htmlFor="wd-points" className="form-label p-3">Points</label>
+                                    {/* Include */}
                                 </td>
                                 <td >
                                     <input type="text" id="wd-points" className="form-control" value={100} />
@@ -106,6 +130,7 @@ export default function AssignmentEditor() {
                                         <td className="input-group">
                                             <input type="date" id="wd-assign-to" value="Everyone" className="" />
                                             <LuCalendarDays className="form-control p-2 fs-1" />
+                                            {/* Include */}
                                         </td>
                                     </tr>
                                     <br />
@@ -121,10 +146,12 @@ export default function AssignmentEditor() {
                                         <td className="input-group">
                                             <input type="date" id="wd-due-date" value="2024-05-13" className="" />
                                             <LuCalendarDays className="form-control p-2 fs-1" />
+                                            {/* Include */}
                                         </td>
                                         <td className="input-group">
                                             <input type="date" id="wd-available-until" value="2024-05-13" className="" />
-                                            <LuCalendarDays className="form-control p-2 fs-1 " />
+                                            <LuCalendarDays className="form-control p-2 fs-1 float-end" />
+                                            {/* Include */}
                                         </td>
                                     </tr>
 
@@ -132,19 +159,18 @@ export default function AssignmentEditor() {
                             </tr>
                         </table>
                         <hr />
+
                         <div className="float-end">
-                            <button className="btn btn-lg btn-secondary me-1">
-                                <a href={`/#/Kanbas/Courses/${assignment.course}/Assignments/`}>
+                            <a href={`/#/Kanbas/Courses/${cid}/Assignments/`}>
+                                <button className="btn btn-lg btn-secondary me-1">
                                     Cancel
-                                </a>
-                            </button>
-                            <button className="btn btn-lg btn-danger">
-                                <a href={`/#/Kanbas/Courses/${assignment.course}/Assignments/`}>Save</a></button>
+                                </button></a>
+                            <a href={`/#/Kanbas/Courses/${cid}/Assignments/`}><button className="btn btn-lg btn-danger"
+                                onClick={addAssignment}>
+                                Save</button></a>
                         </div>
                     </div>
-                    
-                ))
-            }
+                ))}
         </div>
     );
 }
