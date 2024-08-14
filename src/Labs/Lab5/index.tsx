@@ -1,4 +1,4 @@
-import PathParameters from "../Lab3/PathParameters";
+import PathParameters from "./PathParameters";
 import EnvironmentVariables from "./EnvironmentVariables";
 import HttpClient from "./HttpClient";
 import QueryParameters from "./QueryParameters";

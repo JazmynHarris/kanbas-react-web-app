@@ -9,32 +9,37 @@ import { setModules, addModule, deleteModule, editModule, updateModule } from ".
 import * as client from "./client";
 
 export default function Modules() {
-    const saveModule = async (module: any) => {
-        const status = await client.updateModule(module);
-        dispatch(updateModule(module));
-    };
 
+    const { cid } = useParams();
+    const [moduleName, setModuleName] = useState("");
+    const dispatch = useDispatch();
+    const { modules } = useSelector((state: any) => state.modulesReducer);
     const removeModule = async (moduleId: string) => {
         await client.deleteModule(moduleId);
         dispatch(deleteModule(moduleId));
     };
-
-    const { cid } = useParams();
-    const [moduleName, setModuleName] = useState("");
-    const { modules } = useSelector((state: any) => state.modulesReducer);
-    const dispatch = useDispatch();
     const createModule = async (module: any) => {
         const newModule = await client.createModule(cid as string, module);
         dispatch(addModule(newModule));
     };
-
     const fetchModules = async () => {
         const modules = await client.findModulesForCourse(cid as string);
         dispatch(setModules(modules));
     };
     useEffect(() => {
         fetchModules();
-    }, []);
+    },
+        []);
+    const saveModule = async (module: any) => {
+        const status = await client.updateModule(module);
+        dispatch(updateModule(module));
+    };
+
+ 
+    // const dispatch = useDispatch();
+ 
+ 
+ 
 
     return (
         <div>
@@ -63,11 +68,10 @@ export default function Modules() {
                                             }}
                                             value={module.name}/>
                                     )}
-                                    {module.name}
                                     <ModuleControlButtons
                                         moduleId={module._id}
                                         deleteModule={(moduleId) => {
-                                            { removeModule(moduleId); }
+                                            removeModule(moduleId);
                                         }}
                                         editModule={(moduleId) => dispatch(editModule(moduleId))}/>
                                 </div>
