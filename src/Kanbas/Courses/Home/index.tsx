@@ -3,14 +3,14 @@ import CourseStatus from "./Status";
 export default function Home() {
     return (
         <table id="wd-home">
-            <tr>
-                <td valign="top">
+            <div className="row">
+                <div className="col">
                     <Modules />
-                </td>
-                <td valign="top">
+                </div>
+                <div className="col-1">
                     <CourseStatus />
-                </td>
-            </tr>
+                </div>
+            </div>
         </table>
     );
 }
