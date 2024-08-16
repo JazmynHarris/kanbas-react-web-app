@@ -1,5 +1,5 @@
 import { BsGripVertical } from "react-icons/bs";
-import { FaPlus } from "react-icons/fa";
+import { FaCheckCircle, FaCircle, FaPlus, FaTrash } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { MdExpandMore } from "react-icons/md";
@@ -8,6 +8,7 @@ import GreenCheckmark from "./GreenCheckmark";
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import * as client from "./client";
+import DeleteAssignment from "./DeleteAssignment";
 
 export default function Assignments() {
     // const saveAssignment = async (assignment: any) => {
@@ -105,13 +106,49 @@ export default function Assignments() {
                                 </p>
                             </div>
                             <div className="float-end p-3 ps-2 me-3">
-                                <h1>{a._id}</h1>
+                                <span className="me-1 position-relative">
+                                    <FaTrash className="text-danger fs-5 me-2" data-bs-toggle="modal" data-bs-target="#wd-delete-module-dialog" />
+                                    <div id="wd-delete-module-dialog" className="modal fade" data-bs-backdrop="static" data-bs-keyboard="false">
+                                        <div className="modal-dialog">
+                                            <div className="modal-content">
+                                                <div className="modal-header">
+                                                    <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                                                        Delete Assignment
+                                                    </h1>
+                                                    <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div className="modal-body">
+                                                    <p>Are you sure you would like to delete this assignment: {a._id}?</p>
+                                                </div>
+                                                <div className="modal-footer">
+                                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                                                        Cancel </button>
+                                                    <button onClick={() => deleteAssignment(a._id)} type="button" data-bs-dismiss="modal" className="btn btn-danger">
+                                                        Ok </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <FaCheckCircle style={{ top: "2px" }}
+                                        className="text-success me-1 position-absolute fs-5" />
+                                    <FaCircle className="text-white me-1 fs-6" />
+                                    {/* <DeleteAssignment
+                                        dialogTitle="Delete Assignment"
+                                        assignmentId={a._id}
+                                        deleteAssignment={() => deleteAssignment(a._id)} />
+                                    <FaCheckCircle style={{ top: "2px" }}
+                                        className="text-success me-1 position-absolute fs-5" />
+                                    <FaCircle className="text-white me-1 fs-6" /> */}
+                                </span>
+                                {/* <button
+                                    onClick={() => deleteAssignment(a._id)}>Delete</button>
                                 <GreenCheckmark
                                     assignmentId={a._id}
                                     deleteAssignment={() => {
+                                        console.log(a._id);
                                         deleteAssignment(a._id);
                                     }}
-                                />
+                                /> */}
                                 <IoEllipsisVertical className="" />
                             </div>
                         </li>

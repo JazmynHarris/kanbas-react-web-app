@@ -2,7 +2,7 @@ export default function DeleteAssignment({ dialogTitle, assignmentId, deleteAssi
     { dialogTitle: string; assignmentId: string; deleteAssignment: () => void; }) {
     return (
         
-        <div id="wd-delete-module-dialog" className="modal fade" data-bs-backdrop="static" data-bs-keyboard="false">
+        // <div id="wd-delete-module-dialog" className="modal fade" data-bs-backdrop="static" data-bs-keyboard="false">
             <div className="modal-dialog">
                 <div className="modal-content">
                     <div className="modal-header">
@@ -22,6 +22,6 @@ export default function DeleteAssignment({ dialogTitle, assignmentId, deleteAssi
                     </div>
                 </div>
             </div>
-        </div>
+        // {/* </div> */}
     );
 }

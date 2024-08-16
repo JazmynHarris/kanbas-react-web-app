@@ -6,7 +6,7 @@ export default function GreenCheckmark({ assignmentId, deleteAssignment }: { ass
     return (
         <span className="me-1 position-relative">
             <FaTrash className="text-danger fs-5 me-2" data-bs-toggle="modal" data-bs-target="#wd-delete-module-dialog" />
-            <DeleteAssignment
+            <DeleteAssignment 
                 dialogTitle="Delete Assignment"
                 assignmentId={assignmentId}
                 deleteAssignment={deleteAssignment} />
