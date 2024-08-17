@@ -23,6 +23,7 @@ export default function Modules() {
         dispatch(addModule(newModule));
     };
     const fetchModules = async () => {
+        console.log(cid);
         const modules = await client.findModulesForCourse(cid as string);
         dispatch(setModules(modules));
     };
